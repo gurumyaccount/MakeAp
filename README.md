@@ -17,17 +17,36 @@ MakeAp provides a platform for professionals and amateurs to show case their tal
 * Based on the votes, the winner is announced. In the example contest, the winner now gets 10MUT and the voters, for their service get 1.5MUT, which is 1 MUT that was deposited, and 0.5 as reward
 * Keep in mind, that these rewards/fees/contest price/max participates/etc can be customised. The examples above are just to give an idea of how things work.
 
+## Local setup ##
+* git clone < gitrepo >
+* npm install
+* local hardhat node (if needed) - npx hardhat node
+* make sure provide private key in .somefile and also the mumbai rpc endpoint url in hardhat.config.js 
+* replace the dummy value in contracts/VRFv2ForVoterSelection.sol 
+* replace the dummy subscription in scripts/deploy-ChainlinkVRF.js 
+
+
+* 
+## How it deploy ##
+
+
+## Deploy contracts ##
+
+* deploy MUT Contract. This will create the contract id in config-muttoken.js
 ```shell
-npx hardhat accounts
-npx hardhat compile
-npx hardhat clean
-npx hardhat test
-npx hardhat node
-node scripts/sample-script.js
-npx hardhat help
+npx hardhat run scripts/deploy-MUT.js --network localhost
+```
+* deploy chainkink vrf v2 contract . This will create contract id in config-chainlink.js
+```shell
+npx hardhat run scripts/deploy-ChainlinkVRF.js --network localhost
+```
+* deploy main  contract . This will create contract id in config.js
+```shell
+npx hardhat run scripts/deploy.js --network localhost
+```
+## Run app locally ##
 
-
-npm run dev  - run app
-npx hardhat run scripts/deploy.js --network mumbai - deploy
+```shell
+npm run dev  
 ```
 
