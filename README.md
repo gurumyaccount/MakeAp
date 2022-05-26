@@ -1,8 +1,21 @@
-# Basic Sample Hardhat Project
+# MakeAp Project
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, a sample script that deploys that contract, and an example of a task implementation, which simply lists the available accounts.
+MakeAp provides a platform for professionals and amateurs to show case their talent and earn while they do that. The app allows the customer to own a NFT and also participate in compete-to-earn contests. Since this is around the concept of make up, it would encourage "non-crypto" savvy and women to get interested.
 
-Try running some of the following tasks:
+How it works - Simple Workflow
+
+To start off with, the MakeAp application provides a MakeAp NFT marketplace where the customer can buy the NFT.
+Once the customer buys the NFT, he/she is now eligible to participate in the list of contests. along with the eligibility, the customer also gets 50 MUT token that is minted by the project. A MUT is an ERC20 Token, native to the project.
+The NFT owner can go ahead and participate in the contest.
+Each contest has some criteria, like, max participates, participation fees and winning price. Let's take an example of contest C1, with max participates as 3, participation fee as 5 MUT and the winning prize as 10MUT.
+When the contestant participates in C1, 5MUT (fees) is transferred to the project (contract).
+Similarly, 2 other participates also enrol by paying 5 MUT each.
+The contestants can then go ahead and submit the make up video based on the contest criteria.
+Meanwhile, other app users can join the voter pool by depositing 1 MUT token. This token is held in the project and returned back to the voter, along with the "reward" once the winner is announced. The voter is incentivised to join the pool as they are rewarded with MUT token once they cast their vote.
+The voters from the pool are randomly selected using Chainlink VRF V2 and are assigned to the contest.
+Once the voters are assigned to the contest, they can evaluate the video submitted by the contestants and cast their votes.
+Based on the votes, the winner is announced. In the example contest, the winner now gets 10MUT and the voters, for their service get 1.5MUT, which is 1 MUT that was deposited, and 0.5 as reward
+Keep in mind, that these rewards/fees/contest price/max participates/etc can be customised. The examples above are just to give an idea of how things work.
 
 ```shell
 npx hardhat accounts
@@ -17,3 +30,4 @@ npx hardhat help
 npm run dev  - run app
 npx hardhat run scripts/deploy.js --network mumbai - deploy
 ```
+
