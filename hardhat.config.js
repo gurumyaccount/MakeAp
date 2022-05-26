@@ -11,7 +11,7 @@ module.exports = {
     },
     //  unused configuration commented out for now
     mumbai: {
-      url: "https://polygon-mumbai.g.alchemy.com/v2/<key>",
+      url: "https://polygon-mumbai.com/dummy_rpc_end_point_url",
       accounts: [privateKey]
     }
   },
