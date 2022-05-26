@@ -1,7 +1,7 @@
 require("@nomiclabs/hardhat-waffle");
 const fa = require("fs")
 
-const privateKey = fa.readFileSync(".secret").toString()
+const privateKey = fa.readFileSync(".somefile").toString()
 
 module.exports = {
   defaultNetwork: "hardhat",
@@ -11,7 +11,7 @@ module.exports = {
     },
     //  unused configuration commented out for now
     mumbai: {
-      url: "https://polygon-mumbai.g.alchemy.com/v2/X3ts4ZSSp2aATZqlMWYEf9iYC6BoqfSO",
+      url: "https://polygon-mumbai.g.alchemy.com/v2/<key>",
       accounts: [privateKey]
     }
   },
