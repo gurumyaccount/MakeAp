@@ -1,5 +1,19 @@
-# MakeUp Project
+# Basic Sample Hardhat Project
 
-MakeAp provides a platform for professionals and amateurs to show case their talent and earn while they do that. The app brings NFT, compete-to-earn, web3, oracle into one simple platform that would encourage "non-crypto" savvy user to get interested
+This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, a sample script that deploys that contract, and an example of a task implementation, which simply lists the available accounts.
+
+Try running some of the following tasks:
+
+```shell
+npx hardhat accounts
+npx hardhat compile
+npx hardhat clean
+npx hardhat test
+npx hardhat node
+node scripts/sample-script.js
+npx hardhat help
 
 
+npm run dev  - run app
+npx hardhat run scripts/deploy.js --network mumbai - deploy
+```

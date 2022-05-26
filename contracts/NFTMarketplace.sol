@@ -4,7 +4,10 @@ pragma solidity ^0.8.4;
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
+
 import "hardhat/console.sol";
 
 import "hardhat/console.sol";
@@ -15,9 +18,13 @@ contract NFTMarketplace is ERC721URIStorage {
     Counters.Counter private _itemsSold;
     Counters.Counter private _contestIds;
     Counters.Counter private _contestDetailsIds;
+    Counters.Counter private _potentialVoterIds;
+    Counters.Counter private _participantDataIds;
 
     uint256 listingPrice = 0.025 ether;
     address payable owner;
+
+    //address mutToken = mutToken = 0x5FbDB2315678afecb367f032d93F642f64180aa3;
 
     mapping(uint256 => MarketItem) private idToMarketItem;
 
@@ -72,8 +79,57 @@ contract NFTMarketplace is ERC721URIStorage {
     //contestId => ContestDetails
     mapping(uint256 => ContestDetails) private idToContestDetails;
 
+    mapping(uint256 => address) private potentialVoters;
+
+    //participant Info
+
+    struct ParticipantData {
+        address participant;
+        uint256 contestId;
+        string videoLink;
+        address[] votedFor;
+        address[] votedAgainst;
+        bool winner;
+    }
+
+    //_participantDataIds => ParticipantData
+    mapping(uint256 => ParticipantData) private participantToParticipantData;
+
     constructor() ERC721("Metaverse Tokens", "METT") {
         owner = payable(msg.sender);
+        addPotentialVoters();
+    }
+
+    function addPotentialVoters() private {
+        potentialVoters[
+            _potentialVoterIds.current()
+        ] = 0x00F8Ce298B9f830d65A77ADceF7CaCB99D7969b1;
+
+        _potentialVoterIds.increment();
+
+        potentialVoters[
+            _potentialVoterIds.current()
+        ] = 0x00F9ce298b9F830d65A77aDCEF7cacb99d7969b1;
+
+        _potentialVoterIds.increment();
+
+        potentialVoters[
+            _potentialVoterIds.current()
+        ] = 0x00F1CE298B9F830d65a77AdcEF7CacB99D7969B1;
+
+        _potentialVoterIds.increment();
+
+        potentialVoters[
+            _potentialVoterIds.current()
+        ] = 0x00F2cE298B9f830aD5a77ADCEF7caCb99D7969c1;
+
+        _potentialVoterIds.increment();
+
+        potentialVoters[
+            _potentialVoterIds.current()
+        ] = 0x00F3cE298b9f830Ad5A77AdcEf7CAcB99D7969C1;
+
+        _potentialVoterIds.increment();
     }
 
     /* Updates the listing price of the contract */
@@ -298,14 +354,10 @@ contract NFTMarketplace is ERC721URIStorage {
 
     function participateInContest(uint256 contestId) public payable {
         require(idToContestItem[contestId].contestId != 0, "contest not found");
-        require(
+        /*require(
             msg.value == idToContestItem[contestId].participantFee,
-            "Price must be equal to listing price"
-        );
-        require(
-            msg.value == idToContestItem[contestId].participantFee,
-            "Price must be equal to listing price"
-        );
+            "participate has to pay the minimum amount needed to take part in the competition"
+        );*/
 
         ContestDetails storage contestDetails = idToContestDetails[contestId];
 
@@ -322,6 +374,190 @@ contract NFTMarketplace is ERC721URIStorage {
 
         if (!exists) {
             contestDetails.participants.push(msg.sender);
+        }
+    }
+
+    function transferMUTToken(
+        IERC20 token,
+        address to,
+        uint256 amount
+    ) public view returns (uint256) {
+        return token.balanceOf(address(this));
+    }
+
+    //signup to vote
+    //voters
+
+    function signUpToVote() public payable {
+        address voter = payable(msg.sender); //msg.sender;
+
+        uint256 maxPotentialVoterIds = _potentialVoterIds.current();
+
+        bool exists = false;
+
+        for (uint256 i; i < maxPotentialVoterIds; i++) {
+            if (potentialVoters[i] == voter) {
+                exists = true;
+                break;
+            }
+        }
+
+        if (!exists) {
+            potentialVoters[_potentialVoterIds.current()] = voter;
+            _potentialVoterIds.increment();
+        }
+    }
+
+    function fetchAllVoters() public view returns (address[] memory) {
+        uint256 index = _potentialVoterIds.current();
+        address[] memory potVoters = new address[](index);
+        uint256 maxPotentialVoterIds = _potentialVoterIds.current();
+        for (uint256 i; i < maxPotentialVoterIds; i++) {
+            potVoters[i] = potentialVoters[i];
+        }
+
+        return potVoters;
+    }
+
+    function uploadVideoLink(uint256 contestId, string memory videoLink)
+        public
+        payable
+    {
+        //uint256 id = ;
+        bool exists = false;
+        uint256 index = _participantDataIds.current(); //0;
+        for (uint256 i; i <= _participantDataIds.current(); i++) {
+            if (
+                participantToParticipantData[i].participant ==
+                payable(msg.sender) &&
+                participantToParticipantData[i].contestId == contestId
+            ) {
+                index = i;
+                exists = true;
+                break;
+            }
+        }
+
+        participantToParticipantData[index].participant = payable(msg.sender);
+        participantToParticipantData[index].contestId = contestId;
+        participantToParticipantData[index].videoLink = videoLink;
+
+        if (!exists) {
+            _participantDataIds.increment();
+        }
+    }
+
+    function fetchAllParticipantData()
+        public
+        view
+        returns (ParticipantData[] memory)
+    {
+        ParticipantData[] memory participantDataArray = new ParticipantData[](
+            _participantDataIds.current()
+        );
+        uint256 maxIds = _participantDataIds.current();
+        for (uint256 i; i < maxIds; i++) {
+            participantDataArray[i] = participantToParticipantData[i];
+        }
+
+        return participantDataArray;
+    }
+
+    function voteUpOrDown(
+        uint256 contestId,
+        address participantAddress,
+        bool voteYes
+    ) public payable {
+        for (uint256 i; i <= _participantDataIds.current(); i++) {
+            if (
+                participantToParticipantData[i].participant ==
+                participantAddress &&
+                participantToParticipantData[i].contestId == contestId
+            ) {
+                if (voteYes) {
+                    participantToParticipantData[i].votedFor.push(
+                        payable(msg.sender)
+                    );
+                } else {
+                    participantToParticipantData[i].votedAgainst.push(
+                        payable(msg.sender)
+                    );
+                }
+
+                break;
+            }
+        }
+    }
+
+    mapping(uint256 => address[]) private contestIdToVoters;
+
+    function assignVotersToContest(
+        uint256 contestId,
+        uint256[] memory randomNumbers
+    ) public payable {
+        //uint256 maxPotentialVoterIds = _potentialVoterIds.current();
+
+        address[] memory voters = new address[](3);
+        uint32 counter = 0;
+        for (uint256 i; i < randomNumbers.length; i++) {
+            voters[counter] = potentialVoters[randomNumbers[i]];
+            counter++;
+        }
+
+        contestIdToVoters[contestId] = voters;
+    }
+
+    function getVoters(uint256 contestId)
+        public
+        view
+        returns (address[] memory)
+    {
+        return contestIdToVoters[contestId];
+    }
+
+    function winnerAnnouncement(uint256 contestId)
+        public
+        view
+        returns (address)
+    {
+        //address winner = 0x0000000000000000000000000000000000000000;
+        address[] memory winnerAddressArray = new address[](10);
+        uint256[] memory winnerCountArray = new uint256[](10);
+        for (uint256 i; i <= _participantDataIds.current(); i++) {
+            if (participantToParticipantData[i].contestId == contestId) {
+                uint256 voteFor = participantToParticipantData[i]
+                    .votedFor
+                    .length;
+                uint256 voteAgainst = participantToParticipantData[i]
+                    .votedAgainst
+                    .length;
+
+                winnerAddressArray[i] = participantToParticipantData[i]
+                    .participant;
+                winnerCountArray[i] = 0;
+                if (voteFor > voteAgainst) {
+                    winnerCountArray[i] = voteFor - voteAgainst;
+                }
+            }
+        }
+
+        uint256 winnerCount = 0;
+        uint256 winnerId = 100;
+        for (uint256 i = 0; i < winnerAddressArray.length; i++) {
+            if (winnerCount < winnerCountArray[i]) {
+                winnerCount = winnerCountArray[i];
+                winnerId = i;
+            }
+        }
+
+        //address[] memory voters = contestIdToVoters[contestId];
+
+        //for (uint32 i = 0; i < voters.length; i++) {}
+
+        if (winnerId == 100) {
+            return 0x0000000000000000000000000000000000000000;
+        } else {
+            return winnerAddressArray[winnerId];
         }
     }
 

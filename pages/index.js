@@ -7,7 +7,12 @@ import {
   marketplaceAddress
 } from '../config'
 
+import {
+  mutToken
+} from '../config-muttoken'
+
 import NFTMarketplace from '../artifacts/contracts/NFTMarketplace.sol/NFTMarketplace.json'
+import MUTToken from '../artifacts/contracts/MUTToken.sol/MUTToken.json'
 
 export default function Home() {
   const [nfts, setNfts] = useState([])
@@ -17,7 +22,7 @@ export default function Home() {
   }, [])
   async function loadNFTs() {
     /* create a generic provider and query for unsold market items */
-    const provider = new ethers.providers.JsonRpcProvider("https://matic-mumbai.chainstacklabs.com")
+    const provider = new ethers.providers.JsonRpcProvider("https://polygon-mumbai.g.alchemy.com/v2/X3ts4ZSSp2aATZqlMWYEf9iYC6BoqfSO")
     const contract = new ethers.Contract(marketplaceAddress, NFTMarketplace.abi, provider)
     const data = await contract.fetchMarketItems()
 
@@ -57,6 +62,15 @@ export default function Home() {
       value: price
     })
     await transaction.wait()
+
+
+    /* next, create the item */
+
+    let contract2 = new ethers.Contract(mutToken, MUTToken.abi, signer)
+    console.log("signer.getAddress() : " + signer.getAddress())
+    let transaction2 = await contract2.mint(signer.getAddress(), 50)
+    await transaction2.wait()
+
     loadNFTs()
   }
   if (loadingState === 'loaded' && !nfts.length) return (<h1 className="px-20 py-10 text-3xl">No items in marketplace</h1>)
@@ -75,7 +89,7 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="p-4 bg-black">
-                  <p className="text-2xl font-bold text-white">{nft.price} ETH</p>
+                  <p className="text-2xl font-bold text-white">{nft.price} MATIC</p>
                   <button className="mt-4 w-full bg-pink-500 text-white font-bold py-2 px-12 rounded" onClick={() => buyNft(nft)}>Buy</button>
                 </div>
               </div>
