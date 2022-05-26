@@ -3,7 +3,7 @@ const fs = require('fs');
 
 async function main() {
   const VRFv2ForVoterSelection = await hre.ethers.getContractFactory("VRFv2ForVoterSelection");
-  const voterSelection = await VRFv2ForVoterSelection.deploy(320);
+  const voterSelection = await VRFv2ForVoterSelection.deploy(111);
   await voterSelection.deployed();
   console.log("VRFv2ForVoterSelection deployed to:", voterSelection.address);
 
