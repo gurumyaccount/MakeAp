@@ -55,6 +55,8 @@ npm run dev
 
 ```shell
 npx hardhat test test/starter-test.js - To test entire workflow
+
 npx hardhat test test/contest-test.js - To test contest contract
+
 npx hardhat test test/sc-mut-txn-test.js - To test MUT contract  
 ```
