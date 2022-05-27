@@ -29,7 +29,6 @@ MakeAp provides a platform for professionals and amateurs to show case their tal
 * 
 ## How it deploy ##
 
-
 ## Deploy contracts ##
 
 * deploy MUT Contract. This will create the contract id in config-muttoken.js
@@ -47,7 +46,7 @@ npx hardhat run scripts/deploy.js --network localhost
 ## Run app locally ##
 
 ```shell
-npm run dev  
+npm run dev - This will create local server running at 3000 port. You can access it as http://localhost:3000/ 
 ```
 
 
