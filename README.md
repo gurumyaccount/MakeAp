@@ -28,7 +28,7 @@ MakeAp provides a platform for professionals and amateurs to show case their tal
 
 ## How it deploy ##
 
-### Deploy contracts ###
+#### Deploy contracts ####
 
 * deploy MUT Contract. This will create the contract id in config-muttoken.js
 ```shell
