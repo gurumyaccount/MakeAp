@@ -21,12 +21,11 @@ MakeAp provides a platform for professionals and amateurs to show case their tal
 * git clone < gitrepo >
 * npm install
 * local hardhat node (if needed) - npx hardhat node
-* make sure provide private key in .somefile and also the mumbai rpc endpoint url in hardhat.config.js 
+* make sure to provide private key in .somefile and also the mumbai rpc endpoint url in hardhat.config.js 
 * replace the dummy value in contracts/VRFv2ForVoterSelection.sol 
 * replace the dummy subscription in scripts/deploy-ChainlinkVRF.js 
 
 
-* 
 ## How it deploy ##
 
 ## Deploy contracts ##
